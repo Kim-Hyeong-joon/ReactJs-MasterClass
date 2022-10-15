@@ -6,14 +6,23 @@ const Container = styled.div`
   width: 100vw;
   height: 100vh;
 `;
+
 const H1 = styled.h1`
   color: ${(props) => props.theme.textColor};
 `;
 
+interface DummyProps {
+  text: string;
+}
+
+function Dummy({ text }: DummyProps) {
+  return <H1>{text}</H1>;
+}
+
 function App() {
   return (
     <Container>
-      <H1>Protected </H1>
+      <Dummy text="Hello" />
     </Container>
   );
 }
