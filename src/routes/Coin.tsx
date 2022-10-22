@@ -15,8 +15,9 @@ import Price from "./Price";
 
 const Container = styled.div`
   padding: 0px 20px;
-  max-width: 480px;
+  max-width: 700px;
   margin: 0 auto;
+  position: relative;
 `;
 
 const Header = styled.header`
@@ -78,6 +79,13 @@ const Tab = styled.span<{ isActive: boolean }>`
   a {
     display: block;
   }
+`;
+
+const Nav = styled.nav`
+  color: ${(props) => props.theme.accentColor};
+  font-size: 50px;
+  position: absolute;
+  left: 20px;
 `;
 
 interface RouteParams {
@@ -155,8 +163,7 @@ function Coin() {
   );
   const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
     ["tickers", coinId],
-    () => fetchCoinTickers(coinId),
-    { refetchInterval: 5000 }
+    () => fetchCoinTickers(coinId)
   );
   const loading = infoLoading || tickersLoading;
   return (
@@ -167,6 +174,9 @@ function Coin() {
         </title>
       </Helmet>
       <Header>
+        <Nav>
+          <Link to="/">&larr;</Link>
+        </Nav>
         <Title>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
@@ -212,7 +222,7 @@ function Coin() {
 
           <Switch>
             <Route path={`/:coinId/price`}>
-              <Price />
+              <Price priceData={tickersData?.quotes.USD} />
             </Route>
             <Route path={`/:coinId/chart`}>
               <Chart coinId={coinId} />

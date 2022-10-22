@@ -28,11 +28,22 @@ function Chart({ coinId }: ChartProps) {
         "Loading Chart..."
       ) : (
         <ApexChart
-          type="line"
+          type="candlestick"
           series={[
             {
-              name: "price",
-              data: data?.map((price) => parseFloat(price.close)) ?? [],
+              name: "candle",
+              data:
+                data?.map((price) => {
+                  return {
+                    x: new Date(price.time_close * 1000),
+                    y: [
+                      parseFloat(price.open),
+                      parseFloat(price.high),
+                      parseFloat(price.low),
+                      parseFloat(price.close),
+                    ],
+                  };
+                }) ?? [],
             },
           ]}
           options={{
@@ -40,27 +51,36 @@ function Chart({ coinId }: ChartProps) {
               mode: "dark",
             },
             chart: {
-              height: 500,
-              width: 500,
+              type: "candlestick",
+              height: 300,
+              width: 300,
               toolbar: {
                 show: false,
               },
               background: "transparent",
             },
-            grid: { show: false },
+            grid: { show: true },
             stroke: {
               curve: "smooth",
-              width: 3,
+              width: 1,
             },
-            yaxis: { show: false },
+            yaxis: {
+              tooltip: {
+                enabled: true,
+              },
+              show: false,
+            },
             xaxis: {
+              tooltip: {
+                enabled: true,
+              },
               axisBorder: { show: false },
-              labels: { show: false },
-              axisTicks: { show: false },
+              labels: { show: true },
+              axisTicks: { show: true },
               type: "datetime",
-              categories: data?.map((price) =>
+              /* categories: data?.map((price) =>
                 new Date(price.time_close * 1000).toISOString()
-              ),
+              ), */
             },
             fill: {
               type: "gradient",
@@ -69,7 +89,7 @@ function Chart({ coinId }: ChartProps) {
             colors: ["red"],
             tooltip: {
               y: {
-                formatter: (value) => `$ ${value.toFixed(2)}`,
+                formatter: (value) => `${value.toFixed(3)} $`,
               },
             },
           }}
