@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
 import { Helmet } from "react-helmet";
+import { useSetRecoilState } from "recoil";
+import { isDarkAtom } from "../atoms";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -66,8 +68,10 @@ interface ICoin {
 
 interface ICoinsProps {}
 
-function Coins({}: ICoinsProps) {
+function Coins({}) {
+  const setterFn = useSetRecoilState(isDarkAtom);
   const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
+  const onClick = () => setterFn((current) => !current);
   return (
     <Container>
       <Helmet>
@@ -75,7 +79,7 @@ function Coins({}: ICoinsProps) {
       </Helmet>
       <Header>
         <Title>Coins</Title>
-        <button>Toggle Dark Mode</button>
+        <button onClick={onClick}>Toggle Dark Mode</button>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>
